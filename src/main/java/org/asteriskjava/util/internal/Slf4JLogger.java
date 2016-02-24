@@ -16,11 +16,11 @@
 
 package org.asteriskjava.util.internal;
 
+import java.io.Serializable;
+
 import org.asteriskjava.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
 
 /**
  * Implementation of {@link org.asteriskjava.util.Log} that maps to a SLF4J <strong>Logger</strong>.<p>
@@ -161,7 +161,7 @@ public class Slf4JLogger implements Log, Serializable
         {
             logger = LoggerFactory.getLogger(clazz);
         }
-        return (this.logger);
+        return this.logger;
     }
 
     /**
