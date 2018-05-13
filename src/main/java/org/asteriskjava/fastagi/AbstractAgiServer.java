@@ -5,7 +5,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.asteriskjava.fastagi.internal.AgiChannelFactory;
 import org.asteriskjava.fastagi.internal.DefaultAgiChannelFactory;
 import org.asteriskjava.util.DaemonThreadFactory;
 import org.asteriskjava.util.Log;
@@ -28,7 +27,7 @@ public abstract class AbstractAgiServer
     /**
      * The default thread pool size.
      */
-    private static final int DEFAULT_MAXIMUM_POOL_SIZE = 100;
+    private static final int DEFAULT_MAXIMUM_POOL_SIZE = 500;
 
     /**
      * The minimum number of worker threads in the thread pool.

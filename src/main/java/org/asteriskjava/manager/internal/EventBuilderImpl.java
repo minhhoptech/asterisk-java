@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.asteriskjava.manager.event.*;
@@ -78,6 +79,7 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
         registerEventClass(BridgeEvent.class);
         registerEventClass(BridgeExecEvent.class);
         registerEventClass(BridgeLeaveEvent.class);
+        registerEventClass(BridgeMergeEvent.class);
         registerEventClass(BlindTransferEvent.class);
         registerEventClass(AttendedTransferEvent.class);
         registerEventClass(CdrEvent.class);
@@ -96,6 +98,7 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
         registerEventClass(ConfbridgeListRoomsCompleteEvent.class);
         registerEventClass(ConfbridgeStartEvent.class);
         registerEventClass(ConfbridgeTalkingEvent.class);
+        registerEventClass(ContactStatusEvent.class);
         registerEventClass(CoreShowChannelEvent.class);
         registerEventClass(CoreShowChannelsCompleteEvent.class);
         registerEventClass(DAHDIChannelEvent.class);
@@ -135,6 +138,8 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
         registerEventClass(LinkEvent.class);
         registerEventClass(ListDialplanEvent.class);
         registerEventClass(LocalBridgeEvent.class);
+        registerEventClass(LocalOptimizationBeginEvent.class);
+        registerEventClass(LocalOptimizationEndEvent.class);
         registerEventClass(LogChannelEvent.class);
         registerEventClass(NewConnectedLineEvent.class);
         registerEventClass(MasqueradeEvent.class);
@@ -178,6 +183,7 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
         registerEventClass(QueueMemberAddedEvent.class);
         registerEventClass(QueueMemberEvent.class);
         registerEventClass(QueueMemberPausedEvent.class);
+        registerEventClass(QueueMemberPauseEvent.class);
         registerEventClass(QueueMemberPenaltyEvent.class);
         registerEventClass(QueueMemberRemovedEvent.class);
         registerEventClass(QueueMemberStatusEvent.class);
@@ -270,7 +276,7 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
 
         try
         {
-            defaultConstructor = clazz.getConstructor(new Class[]{Object.class});
+            defaultConstructor = clazz.getConstructor(Object.class);
         }
         catch (NoSuchMethodException ex)
         {
@@ -387,7 +393,7 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
 
         try
         {
-            constructor = eventClass.getConstructor(new Class[]{Object.class});
+            constructor = eventClass.getConstructor(Object.class);
         }
         catch (NoSuchMethodException ex)
         {
@@ -448,5 +454,32 @@ class EventBuilderImpl extends AbstractBuilder implements EventBuilder
         }
 
         return event;
+    }
+
+    @Override
+    public void deregisterEventClass(Class< ? extends ManagerEvent> eventClass)
+    {
+
+        Set<String> toRemove = new HashSet<>();
+        for (Entry<String, Class< ? >> registered : registeredEventClasses.entrySet())
+        {
+            if (registered.getValue().equals(eventClass))
+            {
+                toRemove.add(registered.getKey());
+            }
+        }
+        if (toRemove.isEmpty())
+        {
+            logger.warn("Couldn't remove event type " + eventClass);
+        }
+        else
+        {
+            for (String key : toRemove)
+            {
+                registeredEventClasses.remove(key);
+                logger.warn("Removed event type " + key);
+            }
+        }
+
     }
 }

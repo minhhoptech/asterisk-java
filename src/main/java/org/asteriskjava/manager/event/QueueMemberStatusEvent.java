@@ -27,13 +27,55 @@ public class QueueMemberStatusEvent extends QueueMemberEvent
     /**
      * Serializable version identifier
      */
-    private static final long serialVersionUID = -2293926744791895763L;    
+    private static final long serialVersionUID = -2293926744791895763L;
 
-	/**
+    private String ringinuse;
+    private String iface;
+    private Integer incall;
+
+    /**
      * @param source
      */
     public QueueMemberStatusEvent(Object source)
     {
         super(source);
     }
+
+    public String getInterface()
+    {
+        return iface;
+    }
+
+    public void setInterface(String iface)
+    {
+        this.iface = iface;
+    }
+
+    /**
+     * @return the ringinuse
+     */
+    public String getRinginuse()
+    {
+        return ringinuse;
+    }
+
+    /**
+     * @param ringinuse the ringinuse to set
+     */
+    public void setRinginuse(String ringinuse)
+    {
+        this.ringinuse = ringinuse;
+    }
+
+    public Integer getIncall()
+    {
+        return incall;
+    }
+
+    public void setIncall(Integer incall)
+    {
+        this.incall = incall;
+    }
+    
+    
 }

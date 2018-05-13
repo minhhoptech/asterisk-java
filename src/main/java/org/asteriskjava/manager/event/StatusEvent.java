@@ -51,6 +51,12 @@ public class StatusEvent extends ResponseEvent
     private String pickupGroup;
     private String timeToHangup;
     private Map<String, String> variables;
+    private String dnid;
+    private String writetrans;
+    private String bridgeId;
+    private String readtrans;
+    private String connectedlinename;
+    private String connectedlinenum;
 
     public StatusEvent(Object source)
     {
@@ -440,4 +446,84 @@ public class StatusEvent extends ResponseEvent
     {
         this.timeToHangup = timeToHangup;
     }
+
+    /**
+     * @return the dnid
+     */
+    public String getDnid()
+    {
+        return dnid;
+    }
+
+    /**
+     * @param dnid the dnid to set
+     */
+    public void setDnid(String dnid)
+    {
+        this.dnid = dnid;
+    }
+
+    /**
+     * @return the writetrans
+     */
+    public String getWritetrans()
+    {
+        return writetrans;
+    }
+
+    /**
+     * @param writetrans the writetrans to set
+     */
+    public void setWritetrans(String writetrans)
+    {
+        this.writetrans = writetrans;
+    }
+
+    /**
+     * @return the bridgeid
+     */
+    public String getBridgeId()
+    {
+        return bridgeId;
+    }
+
+    /**
+     * @param bridgeid the bridgeid to set
+     */
+    public void setBridgeId(String bridgeid)
+    {
+        this.bridgeId = bridgeid;
+    }
+
+    /**
+     * @return the readtrans
+     */
+    public String getReadtrans()
+    {
+        return readtrans;
+    }
+
+    /**
+     * @param readtrans the readtrans to set
+     */
+    public void setReadtrans(String readtrans)
+    {
+        this.readtrans = readtrans;
+    }
+
+	public String getConnectedlinename() {
+		return connectedlinename;
+	}
+
+	public void setConnectedlinename(String connectedlinename) {
+		this.connectedlinename = connectedlinename;
+	}
+
+	public String getConnectedlinenum() {
+		return connectedlinenum;
+	}
+
+	public void setConnectedlinenum(String connectedlinenum) {
+		this.connectedlinenum = connectedlinenum;
+	}
 }

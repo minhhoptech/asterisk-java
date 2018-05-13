@@ -48,19 +48,10 @@ abstract class AbstractBuilder
             if ("source".equals(setterName))
             {
                 setterName = "src";
-            } 
+            }
             else if ("class".equals(setterName))
             {
-            	setterName = "clazz";
-            }
-
-            /*
-             * The class property needs to be renamed. It is used in
-             * MusicOnHoldEvent.
-             */
-            if ("class".equals(setterName))
-            {
-                setterName = "classname";
+                setterName = "clazz";
             }
 
             setter = setters.get(setterName);
@@ -81,7 +72,8 @@ abstract class AbstractBuilder
             if (setter == null && !(target instanceof UserEvent))
             {
                 logger.warn("Unable to set property '" + entry.getKey() + "' to '" + entry.getValue() + "' on "
-                        + target.getClass().getName() + ": no setter. Please report at https://github.com/asterisk-java/asterisk-java/issues");
+                        + target.getClass().getName()
+                        + ": no setter. Please report at https://github.com/asterisk-java/asterisk-java/issues");
             }
 
             if (setter == null)
@@ -100,7 +92,17 @@ abstract class AbstractBuilder
                 value = entry.getValue();
                 if (AstUtil.isNull(value))
                 {
+
                     value = null;
+                }
+                if (value instanceof List) {
+                    StringBuilder strBuff = new StringBuilder();
+                    for (String tmp : (List<String>) value) {
+                        if (tmp != null && tmp.length() != 0) {
+                            strBuff.append(tmp).append('\n');
+                        }
+                    }
+                    value = strBuff.toString();
                 }
             }
             else if (dataType.isAssignableFrom(Map.class))
@@ -123,14 +125,14 @@ abstract class AbstractBuilder
             {
                 try
                 {
-                    Constructor< ? > constructor = dataType.getConstructor(new Class[]{String.class});
+                    Constructor< ? > constructor = dataType.getConstructor(String.class);
                     value = constructor.newInstance(entry.getValue());
                 }
                 catch (Exception e)
                 {
-                    logger.error(e.getMessage());
-                    logger.error("Unable to convert value '" + entry.getValue() + "' of property '" + entry.getKey()
-                            + "' on " + target.getClass().getName() + " to required type " + dataType, e);
+                    logger.error("Unable to convert value: Called the constructor of " + dataType + " with value '"
+                            + entry.getValue() + "' for the attribute '" + entry.getKey() + "'\n of event type "
+                            + target.getClass().getName() + " with resulting error: " + e.getMessage(), e);
                     continue;
                 }
             }
