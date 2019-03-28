@@ -80,6 +80,7 @@ public enum AsteriskPBX implements PBX, ChannelHangupListener
     private final Log logger = LogFactory.getLog(getClass());
     private boolean muteSupported;
     private boolean bridgeSupport;
+    private boolean expectRenameEvents;
 
     private static final int MAX_MEETME_ROOMS = 500;
 
@@ -93,23 +94,15 @@ public enum AsteriskPBX implements PBX, ChannelHangupListener
 
             this.muteSupported = CoherentManagerConnection.getInstance().isMuteAudioSupported();
             this.bridgeSupport = CoherentManagerConnection.getInstance().isBridgeSupported();
+            expectRenameEvents = CoherentManagerConnection.getInstance().expectRenameEvents();
             liveChannels = new LiveChannelManager();
-            try
-            {
-                MeetmeRoomControl.init(this, AsteriskPBX.MAX_MEETME_ROOMS);
-            }
-            catch (Throwable e)
-            {
-                logger.error(e, e);
-            }
 
+            MeetmeRoomControl.init(this, AsteriskPBX.MAX_MEETME_ROOMS);
         }
-        catch (IllegalStateException | IOException | AuthenticationFailedException | TimeoutException
-                | InterruptedException e1)
+        catch (Exception e)
         {
-            logger.error(e1, e1);
+            throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -903,16 +896,12 @@ public enum AsteriskPBX implements PBX, ChannelHangupListener
         return dialer;
     }
 
-    public DialToAgiWithAbortCallback dialToAgiWithAbort(EndPoint endPoint, CallerID callerID, int timeout,
+    public DialToAgiActivityImpl dialToAgiWithAbort(EndPoint endPoint, CallerID callerID, int timeout,
             AgiChannelActivityAction action, ActivityCallback<DialToAgiActivity> iCallback)
     {
 
-        final CompletionAdaptor<DialToAgiActivity> completion = new CompletionAdaptor<>();
+        return new DialToAgiActivityImpl(endPoint, callerID, timeout, false, iCallback, null, action);
 
-        final DialToAgiActivityImpl dialer = new DialToAgiActivityImpl(endPoint, callerID, timeout, false, completion, null,
-                action);
-
-        return new DialToAgiWithAbortCallback(dialer, completion, iCallback);
     }
 
     /**
@@ -1024,6 +1013,11 @@ public enum AsteriskPBX implements PBX, ChannelHangupListener
     public List<ChannelProxy> getChannelList()
     {
         return liveChannels.getChannelList();
+    }
+
+    public boolean expectRenameEvents()
+    {
+        return expectRenameEvents;
     }
 
 }
